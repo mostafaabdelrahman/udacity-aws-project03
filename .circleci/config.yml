@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build-${CIRCLE_WORKFLOW_ID:0:7}]
+          keys: [frontend-build-{{ checksum "package-lock.json" }}]
       - run:
           name: Build frontend
           command: |
@@ -48,7 +48,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: frontend-build-{{ checksum "package-lock.json" }}
 
   build-backend:
     docker:
@@ -56,7 +56,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build-${CIRCLE_WORKFLOW_ID:0:7}]
+          keys: [backend-build-{{ checksum "package-lock.json" }}]
       - run:
           name: Build backend
           command: |
@@ -65,7 +65,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: backend-build-{{ checksum "package-lock.json" }}
 
   test-frontend:
     docker:
@@ -73,7 +73,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build-${CIRCLE_WORKFLOW_ID:0:7}]
+          keys: [frontend-build-{{ checksum "package-lock.json" }}]
       - run:
           name: Test frontend
           command: |
@@ -86,7 +86,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build-${CIRCLE_WORKFLOW_ID:0:7}]
+          keys: [backend-build-{{ checksum "package-lock.json" }}]
       - run:
           name: Test backend
           command: |
