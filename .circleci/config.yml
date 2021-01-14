@@ -104,7 +104,7 @@ jobs:
           name: Scan frontend
           command: |
             cd frontend
-            npm update
+            npm i
             npm audit fix --audit-level=critical --force
 
   scan-backend:
@@ -118,7 +118,7 @@ jobs:
           name: Scan backend
           command: |
             cd backend
-            npm update
+            npm i
             npm audit fix --audit-level=critical --force
 
 workflows:
