@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['frontend-build-{{ checksum "frontend/package.json" }}']
+          keys: ['frontend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Build frontend
           command: |
@@ -48,7 +48,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build-{{ checksum "frontend/package.json" }}
+          key: frontend-build-${CIRCLE_WORKFLOW_ID:0:7}
 
   build-backend:
     docker:
@@ -56,7 +56,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-build-{{ checksum "backend/package.json" }}']
+          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Build backend
           command: |
@@ -65,7 +65,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build-{{ checksum "backend/package.json" }}
+          key: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
 
   test-frontend:
     docker:
@@ -73,7 +73,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['frontend-build-{{ checksum "frontend/package.json" }}']
+          keys: ['frontend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Test frontend
           command: |
@@ -86,7 +86,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-build-{{ checksum "backend/package.json" }}']
+          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Test backend
           command: |
@@ -99,13 +99,13 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['frontend-build-{{ checksum "frontend/package.json" }}']
+          keys: ['frontend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Scan frontend
           command: |
             cd frontend
-            npm i
-            npm audit --audit-level=critical
+            npm update
+            npm audit fix --audit-level=critical --force
 
   scan-backend:
     docker:
@@ -113,13 +113,13 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-build-{{ checksum "backend/package.json" }}']
+          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Scan backend
           command: |
             cd backend
-            npm i
-            npm audit --audit-level=critical
+            npm update
+            npm audit fix --audit-level=critical --force
 
 workflows:
   udapeople-workflow:
