@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ["frontend-build-{{ checksum "package.json" }}"]
+          keys: ['frontend-build-{{ checksum "package.json" }}']
       - run:
           name: Build frontend
           command: |
@@ -56,7 +56,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ["backend-build-{{ checksum "package.json" }}"]
+          keys: ['backend-build-{{ checksum "package.json" }}']
       - run:
           name: Build backend
           command: |
