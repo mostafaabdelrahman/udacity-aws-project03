@@ -70,7 +70,7 @@ jobs:
           key: backend-build
          
 workflows:
-  udapeople-wf:
+  udapeople-workflow:
     jobs:
       - build-frontend
       - build-backend
