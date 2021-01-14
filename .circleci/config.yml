@@ -90,7 +90,7 @@ jobs:
       - run:
           name: Test backend
           command: |
-            cd bacakend/node_modules
+            cd backend/node_modules
             npm run test        
 
 workflows:
