@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['frontend-build-{{ checksum "package.json" }}']
+          keys: ['frontend-build-{{ checksum "frontend/package.json" }}']
       - run:
           name: Build frontend
           command: |
@@ -48,7 +48,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build-{{ checksum "package.json" }}
+          key: frontend-build-{{ checksum "frontend/package.json" }}
 
   build-backend:
     docker:
@@ -56,7 +56,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-build-{{ checksum "package.json" }}']
+          keys: ['backend-build-{{ checksum "backend/package.json" }}']
       - run:
           name: Build backend
           command: |
@@ -65,7 +65,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build-{{ checksum "package.json" }}
+          key: backend-build-{{ checksum "backend/package.json" }}
 
   test-frontend:
     docker:
@@ -73,7 +73,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['frontend-build-{{ checksum "package.json" }}']
+          keys: ['frontend-build-{{ checksum "frontend/package.json" }}']
       - run:
           name: Test frontend
           command: |
@@ -86,7 +86,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-build-{{ checksum "package.json" }}']
+          keys: ['backend-build-{{ checksum "backend/package.json" }}']
       - run:
           name: Test backend
           command: |
