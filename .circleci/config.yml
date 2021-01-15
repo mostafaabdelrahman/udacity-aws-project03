@@ -138,7 +138,7 @@ jobs:
           name: Programmatically save the new back-end url
           command: |
             export backend-url=`aws cloudformation \
-            list-exports --query "Exports[?Name==\`backend-url\`].Value" \
+            list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
             --no-paginate --output text`
 
             curl -H "Content-Type: text/plain" \
