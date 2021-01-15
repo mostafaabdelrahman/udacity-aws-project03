@@ -186,7 +186,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["43:26:dd:2e:16:e6:d7:87:c3:49:45:d4:6e:ff:57:50"]
       - attach_workspace:
-          at: /tmp/.circleci/ansible
+          at: /tmp
       - run: cat /tmp/.circleci/ansible/inventory.txt
       # - run:
       #     name: "Install Ansible using apk"
