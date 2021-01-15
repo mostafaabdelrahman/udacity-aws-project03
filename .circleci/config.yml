@@ -143,7 +143,7 @@ jobs:
 
             echo "$backendurl"
 
-            curl -v -H "Content-Type: text/plain" \
+            curl -v --path-as-is -H "Content-Type: text/plain" \
               -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \ 
               --data "$backendurl" https://api.memstash.io/values/backendurl
 
