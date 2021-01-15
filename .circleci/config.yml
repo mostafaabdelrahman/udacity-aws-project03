@@ -126,24 +126,24 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-    #   - run:
-    #       name: Ensure back-end infrastructure exists
-    #       command: |
-    #         aws cloudformation deploy \
-    #           --template-file .circleci/files/backend.yml \
-    #           --tags project=udapeople \
-    #           --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-    #           --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --tags project=udapeople \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
           name: Programmatically save the new back-end url
           command: |
-            # export backendurl=$(aws cloudformation \
-            # list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
-            # --no-paginate --output text)
+            export backend_url=$(aws cloudformation \
+            list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
+            --no-paginate --output text)
 
             curl -v --path-as-is -H "Content-Type: text/plain" \
               -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
-              --data "backend_url" https://api.memstash.io/values/backend_url
+              --data "$backend_url" https://api.memstash.io/values/backend_url
 
       - run:
           name: Ensure front-end infrastructure exist
