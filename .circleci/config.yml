@@ -189,7 +189,7 @@ jobs:
       - run: cat .circleci/ansible/inventory.txt
       - attach_workspace:
           at: project/.circleci/ansible/inventory.txt
-      - run: cat .circleci/ansible/inventory.txt
+      - run: pwd && cat .circleci/ansible/inventory.txt
       # - run:
       #     name: "Install Ansible using apk"
       #     command: |
