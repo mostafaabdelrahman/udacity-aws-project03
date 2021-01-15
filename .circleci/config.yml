@@ -137,13 +137,13 @@ jobs:
       - run:
           name: Programmatically save the new back-end url
           command: |
-            export backend_url=$(aws cloudformation \
+            export backendurl=$(aws cloudformation \
             list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
             --no-paginate --output text)
 
             curl -H "Content-Type: text/plain" \
               -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \ 
-              --data "$backend_url" https://api.memstash.io/values/backendurl
+              --data "$backendurl" https://api.memstash.io/values/backendurl
 
       - run:
           name: Ensure front-end infrastructure exist
