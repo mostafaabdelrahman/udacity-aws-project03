@@ -163,7 +163,6 @@ jobs:
       #         --query 'Reservations[*].Instances[*].PublicIpAddress' \
       #         --output text >> .circleci/ansible/inventory.txt
       - run: echo 1.1.1.1 >> .circleci/ansible/inventory.txt
-      - run: cat .circleci/ansible/inventory.txt
       - run:
           name: Install persist_to_workspace dependencies
           command: |
@@ -186,10 +185,9 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["43:26:dd:2e:16:e6:d7:87:c3:49:45:d4:6e:ff:57:50"]
-      - run: cat .circleci/ansible/inventory.txt
       - attach_workspace:
-          at: project/.circleci/ansible/inventory.txt
-      - run: pwd && cat .circleci/ansible/inventory.txt
+          at: .circleci/ansible
+      - run: cat .circleci/ansible/inventory.txt
       # - run:
       #     name: "Install Ansible using apk"
       #     command: |
