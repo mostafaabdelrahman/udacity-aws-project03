@@ -141,7 +141,7 @@ jobs:
             list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
             --no-paginate --output text)
 
-            curl -H "Content-Type: text/plain" \
+            curl -g -H "Content-Type: text/plain" \
               -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \ 
               --data "$backend_url" https://api.memstash.io/values/backend-url
 
