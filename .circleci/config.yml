@@ -142,8 +142,8 @@ jobs:
             # --no-paginate --output text)
 
             curl -v --path-as-is -H "Content-Type: text/plain" \
-              -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \ 
-              --data "backendurl" https://api.memstash.io/values/backendurl
+              -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
+              --data "backend_url" https://api.memstash.io/values/backend_url
 
       - run:
           name: Ensure front-end infrastructure exist
