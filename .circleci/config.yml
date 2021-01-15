@@ -126,44 +126,45 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run:
-          name: Ensure back-end infrastructure exists
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/backend.yml \
-              --tags project=udapeople \
-              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-      - run:
-          name: Programmatically save the new back-end url
-          command: |
-            export backend_url=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
-            --no-paginate --output text)
+      # - run:
+      #     name: Ensure back-end infrastructure exists
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file .circleci/files/backend.yml \
+      #         --tags project=udapeople \
+      #         --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      # - run:
+      #     name: Programmatically save the new back-end url using MemStash.io
+      #     command: |
+      #       # Get BackendURL from cloudformation outputs
+      #       export backend_url=$(aws cloudformation \
+      #       list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
+      #       --no-paginate --output text)
+      #       # Save to MemStash.io
+      #       curl -H "Content-Type: text/plain" \
+      #         -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
+      #         --data "$backend_url" https://api.memstash.io/values/backend_url
 
-            curl -v --path-as-is -H "Content-Type: text/plain" \
-              -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
-              --data "$backend_url" https://api.memstash.io/values/backend_url
+      # - run:
+      #     name: Ensure front-end infrastructure exist
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file .circleci/files/frontend.yml \
+      #         --tags project=udapeople \
+      #         --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
 
+      # - run:
+      #     name: Add back-end ip to ansible inventory
+      #     command: |
+      #       aws ec2 describe-instances \
+      #         --filters "Name=tag:project,Values=udapeople" \
+      #         --query 'Reservations[*].Instances[*].PublicIpAddress' \
+      #         --output text >> .circleci/ansible/inventory.txt
+      - run: echo 1.1.1.1 >> .circleci/ansible/inventory.txt
       - run:
-          name: Ensure front-end infrastructure exist
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/frontend.yml \
-              --tags project=udapeople \
-              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
-
-      - run:
-          name: Add back-end ip to ansible inventory
-          command: |
-            aws ec2 describe-instances \
-              --filters "Name=tag:project,Values=udapeople" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> .circleci/ansible/inventory.txt
-
-      - run:
-          name: Install Workspace Dependencies
+          name: Install persist_to_workspace dependencies
           command: |
             yum -y install tar gzip
 
@@ -172,7 +173,32 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       
-      - destroy-environment  
+      # - destroy-environment
+
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    # add env var for ssh key checking bypass
+    environment:
+      ANSIBLE_HOST_KEY_CHECKING: False
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["43:26:dd:2e:16:e6:d7:87:c3:49:45:d4:6e:ff:57:50"]
+      - attach_workspace:
+          at: project/.circleci/ansible/inventory.txt
+      - run: cat .circleci/ansible/inventory.txt
+      # - run:
+      #     name: "Install Ansible using apk"
+      #     command: |
+      #       apk add --no-cache ansible
+      # - run:
+      #     name: Configure server
+      #     command: |
+      #       # ansible-playbook main-remote.yml -i inventory
+      #       # Your code here
+      #       exit 1
+      # - destroy-environment  
 
 workflows:
   udapeople-workflow:
