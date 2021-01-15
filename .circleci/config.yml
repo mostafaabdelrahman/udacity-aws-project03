@@ -169,9 +169,12 @@ jobs:
             yum -y install tar gzip
 
       - persist_to_workspace:
-          root: ~/
+          # root: ~/
+          # paths:
+          #   - project/.circleci/ansible/inventory.txt
+          root: .circleci/ansible
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - inventory.txt
       
       # - destroy-environment
 
@@ -186,8 +189,9 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["43:26:dd:2e:16:e6:d7:87:c3:49:45:d4:6e:ff:57:50"]
       - attach_workspace:
-          at: /tmp
-      - run: cat /tmp/project/.circleci/ansible/inventory.txt
+          # at: /tmp
+          at: .circleci/ansible
+      - run: cat .circleci/ansible/inventory.txt
       # - run:
       #     name: "Install Ansible using apk"
       #     command: |
