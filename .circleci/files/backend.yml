@@ -36,6 +36,6 @@ Resources:
 
 Outputs:
   BackendURL:
-    Value: !Sub http://${EC2Instance.PublicDnsName:3030}
+    Value: !Sub http://${EC2Instance.PublicDnsName}:3030
     Export:
       Name: BackendURL
