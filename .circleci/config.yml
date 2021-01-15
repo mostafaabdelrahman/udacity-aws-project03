@@ -143,7 +143,7 @@ jobs:
 
             curl -H "Content-Type: text/plain" \
               -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \ 
-              --data "$backend_url" https://api.memstash.io/values/backend_url
+              --data "$backend_url" https://api.memstash.io/values/backendurl
 
       - run:
           name: Ensure front-end infrastructure exist
@@ -161,6 +161,11 @@ jobs:
               --filters "Name=tag:project,Values=udapeople" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text >> .circleci/ansible/inventory.txt
+
+      - run:
+          name: Install Workspace Dependencies
+          command: |
+            yum -y install tar gzip
 
       - persist_to_workspace:
           root: ~/
