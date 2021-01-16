@@ -210,7 +210,7 @@ jobs:
             ls -l
             cd backend
             ls -l
-            npm i
+            npm install reinstall -g
             npm run build
             # npm run migrations >> migrations.log
             # cat migrations.log
