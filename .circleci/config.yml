@@ -188,9 +188,9 @@ jobs:
       # - attach_workspace:
       #     at: .circleci/ansible
       - run:
-          name: "Install Ansible using apk"
+          name: "Install Ansible and AWSCLI using apk"
           command: |
-            apk add --no-cache ansible
+            apk add --no-cache ansible aws-cli
       # - run:
       #     name: Configure server
       #     command: |
