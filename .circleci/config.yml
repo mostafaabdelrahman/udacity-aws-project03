@@ -55,8 +55,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      # - restore_cache:
-      #     keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
+      - restore_cache:
+          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Build backend
           command: |
@@ -201,19 +201,19 @@ jobs:
 
   run-migrations:
     docker:
-      # - image: circleci/node:13.8.0
-      - image: cimg/node:13.14.0
+      - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache:
+          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Run migrations
           command: |
             cd backend
-            npm install
-            npm audit fix --force
+            npm i
             npm run build
-            npm run migrations >> migrations.log
-            cat migrations.log
+            # npm run migrations >> migrations.log
+            # cat migrations.log
 
     #   - run:
     #       name: Send migration results to memstash
