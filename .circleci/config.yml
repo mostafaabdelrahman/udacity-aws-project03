@@ -23,13 +23,13 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
+            SUCCESS=`curl -H "token: tkn-${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}`
+            echo $SUCCESS
             if(( $SUCCESS==1 )); 
             then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
+              cd ~/project/backend
+              npm install
+              npm run migrations:revert
             fi
             
 jobs:
@@ -204,32 +204,26 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      # - restore_cache:
-      #     keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Run migrations
           command: |
             cd backend
             npm i
-            npm run build
-            # npm run migrations >> migrations.log
-            # cat migrations.log
+            npm run migrations >> migrations.log
       - run:
           name: Send migration results to memstash
           command: |
             echo "tkn-${CIRCLE_WORKFLOW_ID}"
             if grep -q "has been executed successfully" ~/project/backend/migrations.log
             then
-              echo "migrated"
               curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
               --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             else
-              echo "failed"
               curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
               --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
     #  # Here's where you will add some code to rollback on failure      
-    #   - revert-migrations
+      - revert-migrations
     #   - destroy-environment
 
   deploy-backend:
