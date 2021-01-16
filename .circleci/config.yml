@@ -56,7 +56,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
+          keys: ['backend-build-${CIRCLE_WORKFLOW_ID}']
       - run:
           name: Build backend
           command: |
@@ -68,7 +68,7 @@ jobs:
           paths:
             - "backend/node_modules"
             - "backend/dist"
-          key: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: backend-build-${CIRCLE_WORKFLOW_ID}
 
   test-frontend:
     docker:
