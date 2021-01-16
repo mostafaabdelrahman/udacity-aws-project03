@@ -134,26 +134,26 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-      # - run:
-      #     name: Programmatically save the new back-end url using MemStash.io
-      #     command: |
-      #       # Get BackendURL from cloudformation outputs
-      #       export backend_url=$(aws cloudformation \
-      #       list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
-      #       --no-paginate --output text)
-      #       # Save to MemStash.io
-      #       curl -H "Content-Type: text/plain" \
-      #         -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
-      #         --data "$backend_url" https://api.memstash.io/values/backend_url
+      - run:
+          name: Programmatically save the new back-end url using MemStash.io
+          command: |
+            # Get BackendURL from cloudformation outputs
+            export backend_url=$(aws cloudformation \
+            list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
+            --no-paginate --output text)
+            # Save to MemStash.io
+            curl -H "Content-Type: text/plain" \
+              -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
+              --data "$backend_url" https://api.memstash.io/values/backend_url
 
-      # - run:
-      #     name: Ensure front-end infrastructure exist
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file .circleci/files/frontend.yml \
-      #         --tags project=udapeople \
-      #         --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --tags project=udapeople \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
 
       - run:
           name: Add back-end ip to ansible inventory
@@ -204,44 +204,51 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run: sudo apt update -y && sudo apt install awscli
-      - run: aws --version
-      # - run:
-      #     name: Run migrations
-      #     command: |
-      #       cd backend
-      #       npm i
-      #       npm run migrations >> migrations.log
-      # - run:
-      #     name: Send migration results to memstash
-      #     command: |
-      #       echo "tkn-${CIRCLE_WORKFLOW_ID}"
-      #       if grep -q "has been executed successfully" ~/project/backend/migrations.log
-      #       then
-      #         curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
-      #         --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-      #       else
-      #         curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
-      #         --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-      #       fi
-      # - revert-migrations
-    #   - destroy-environment
+      - run: 
+          name: Install AWSCLI
+          command: |
+            sudo apt update -y && sudo apt install -y awscli
+      - run:
+          name: Run migrations
+          command: |
+            cd backend
+            npm i
+            npm run migrations >> migrations.log
+      - run:
+          name: Send migration results to memstash
+          command: |
+            echo "tkn-${CIRCLE_WORKFLOW_ID}"
+            if grep -q "has been executed successfully" ~/project/backend/migrations.log
+            then
+              curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
+              --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            else
+              curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
+              --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            fi
+      - revert-migrations
+      - destroy-environment
 
   deploy-backend:
     docker:
       - image: python:3.7-alpine3.11
     steps:
-      # Checkout code from git
-      # Add ssh keys with fingerprint
-      # attach workspace
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["43:26:dd:2e:16:e6:d7:87:c3:49:45:d4:6e:ff:57:50"]
+      - attach_workspace:
+          at: .circleci/ansible
       - run:
-          name: Install dependencies
+          name: "Install dependencies (ansible, awscli)" 
           command: |
-            # your code here
+            apk add --no-cache ansible python3 py3-pip
+            pip3 install --upgrade pip
+            pip3 install awscli
       - run:
           name: Deploy backend
           command: |
-            # your code here
+            cat .circleci/ansible/inventory.txt
+            #ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure  
 
 workflows:
@@ -261,4 +268,5 @@ workflows:
       #     # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
-      - run-migrations
+      # - run-migrations
+      - deploy-backend
