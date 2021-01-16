@@ -210,9 +210,7 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm cache clean --force
-            npm install
-            ls -laR node_modules | grep tsc
+            npm i
             npm run build
             # npm run migrations >> migrations.log
             # cat migrations.log
