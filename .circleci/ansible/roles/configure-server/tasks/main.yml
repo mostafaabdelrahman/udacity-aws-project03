@@ -1,30 +1,35 @@
 ---
-- name: "update apt packages."
+- name: "Update apt packages."
   become: yes
   apt:
     update_cache: yes
 
-- name: "upgrade packages"
+- name: "Upgrade packages"
   become: yes
   apt:
-    upgrade: yes
+    upgrade: "yes"
 
-- name: "remove dependencies that are no longer required"
+- name: "Remove dependencies that are no longer required"
   become: yes
   apt:
     autoremove: yes
 
-- name: "install nodejs"
+- name: "Install nodejs"
   become: yes
   apt:
     name: ["nodejs", "npm"]
     state: latest
     update_cache: yes
 
-- name: "install pm2"
+- name: "Install pm2"
   become: yes
   npm:
     name: pm2
     global: yes
     production: yes
     state: present
+
+- name: "Start pm2"
+  shell: |
+    cd /home/ubuntu/backend
+    pm2 start npm --name backend -- start
