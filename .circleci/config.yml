@@ -134,26 +134,26 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-      - run:
-          name: Programmatically save the new back-end url using MemStash.io
-          command: |
-            # Get BackendURL from cloudformation outputs
-            export backend_url=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
-            --no-paginate --output text)
-            # Save to MemStash.io
-            curl -H "Content-Type: text/plain" \
-              -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
-              --data "$backend_url" https://api.memstash.io/values/backend_url
+      # - run:
+      #     name: Programmatically save the new back-end url using MemStash.io
+      #     command: |
+      #       # Get BackendURL from cloudformation outputs
+      #       export backend_url=$(aws cloudformation \
+      #       list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
+      #       --no-paginate --output text)
+      #       # Save to MemStash.io
+      #       curl -H "Content-Type: text/plain" \
+      #         -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
+      #         --data "$backend_url" https://api.memstash.io/values/backend_url
 
-      - run:
-          name: Ensure front-end infrastructure exist
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/frontend.yml \
-              --tags project=udapeople \
-              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
+      # - run:
+      #     name: Ensure front-end infrastructure exist
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file .circleci/files/frontend.yml \
+      #         --tags project=udapeople \
+      #         --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
 
       - run:
           name: Add back-end ip to ansible inventory
@@ -185,24 +185,20 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["43:26:dd:2e:16:e6:d7:87:c3:49:45:d4:6e:ff:57:50"]
-      # - attach_workspace:
-      #     at: .circleci/ansible
+      - attach_workspace:
+          at: .circleci/ansible
       - run:
           name: "Install Ansible using apk, AWSCLI using pip"
           command: |
             apk add --no-cache ansible python3 py3-pip
             pip3 install --upgrade pip
             pip3 install awscli
-
-      # - run:
-      #     name: Configure server
-      #     command: |
-      #       # ansible-playbook main-remote.yml -i inventory
-      #       # Your code here
-      #       exit 1
-      # - destroy-environment  
-      - run: ansible --version
-      - run: aws --version
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt
+            # exit 1
+      - destroy-environment  
 
 workflows:
   udapeople-workflow:
@@ -217,8 +213,7 @@ workflows:
       #     requires: [build-frontend]
       # - scan-backend:
       #     requires: [build-backend]
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      - configure-infrastructure
+      - deploy-infrastructure:
+          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
