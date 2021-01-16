@@ -210,7 +210,7 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            ls -la
+            ls -l node_modules
             npm i
             # npm run build
             npm run migrations >> migrations.log
