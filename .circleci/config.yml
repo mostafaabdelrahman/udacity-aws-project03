@@ -211,7 +211,7 @@ jobs:
           command: |
             cd backend
             npm i
-            # npm run build
+            npm run build
             npm run migrations >> migrations.log
             cat migrations.log
 
