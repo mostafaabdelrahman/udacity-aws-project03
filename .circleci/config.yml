@@ -197,8 +197,53 @@ jobs:
           name: Configure server
           command: |
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt
-            # exit 1
       - destroy-environment  
+
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: Run migrations
+          command: |
+            cd backend
+            # npm i
+            npm run migrations >> migrations.log
+            cat migrations.log
+      - run:
+          name: Send migration results to memstash
+          command: |
+            if [ grep -q "has been executed successfully" migrations.log ]
+            then
+              echo "migrated"
+              curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
+              --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            else
+              echo "failed"
+              curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
+              --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+            fi
+     # Here's where you will add some code to rollback on failure      
+      - revert-migrations
+      - destroy-environment
+
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      # Checkout code from git
+      # Add ssh keys with fingerprint
+      # attach workspace
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+      - run:
+          name: Deploy backend
+          command: |
+            # your code here
+      # Here's where you will add some code to rollback on failure  
 
 workflows:
   udapeople-workflow:
@@ -213,7 +258,8 @@ workflows:
       #     requires: [build-frontend]
       # - scan-backend:
       #     requires: [build-backend]
-      - deploy-infrastructure
-          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
+      # - deploy-infrastructure
+      #     # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
+      - run-migrations
