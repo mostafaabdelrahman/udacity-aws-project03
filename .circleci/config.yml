@@ -201,9 +201,7 @@ jobs:
 
   run-migrations:
     docker:
-      # - image: circleci/node:13.8.0
-      - image: circleci/node
-      # - image: circleci/node:12.18.4
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - run:
@@ -211,6 +209,7 @@ jobs:
           command: |
             cd backend
             npm install
+            npm audit fix --force
             npm run build
             npm run migrations >> migrations.log
             cat migrations.log
