@@ -64,7 +64,10 @@ jobs:
             npm i
             npm run build
       - save_cache:
-          paths: [backend/node_modules,backend/dist]
+          # paths: [backend/node_modules,backend/dist]
+          paths:
+            - "backend/node_modules"
+            - "backend/dist"
           key: backend-build-${CIRCLE_WORKFLOW_ID:0:7}
 
   test-frontend:
