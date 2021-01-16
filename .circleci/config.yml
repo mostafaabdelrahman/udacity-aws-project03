@@ -204,8 +204,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
+      # - restore_cache:
+      #     keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Run migrations
           command: |
