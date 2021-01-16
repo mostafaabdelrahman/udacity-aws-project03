@@ -204,12 +204,18 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache:
+          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
       - run:
           name: Run migrations
           command: |
+            echo $(pwd)
             cd backend
+            echo $(pwd)
             npm i
+            echo $(pwd)
             npm run build
+            echo $(pwd)
             # npm run migrations >> migrations.log
             # cat migrations.log
 
