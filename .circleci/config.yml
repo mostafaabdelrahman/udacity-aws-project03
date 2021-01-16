@@ -180,7 +180,7 @@ jobs:
       - image: python:3.7-alpine3.11
     # add env var for ssh key checking bypass
     environment:
-      ANSIBLE_HOST_KEY_CHECKING: "False"
+      ANSIBLE_HOST_KEY_CHECKING: False
     steps:
       - checkout
       - add_ssh_keys:
@@ -218,4 +218,4 @@ workflows:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
-      - configure-infrastructure:
+      - configure-infrastructure
