@@ -219,7 +219,7 @@ jobs:
           name: Send migration results to memstash
           command: |
             echo "tkn-${CIRCLE_WORKFLOW_ID}"
-            if grep -q "has been executed successfully" migrations.log
+            if grep -q "has been executed successfully" ~/project/backend/migrations.log
             then
               echo "migrated"
               curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
