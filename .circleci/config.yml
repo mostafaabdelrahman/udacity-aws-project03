@@ -209,6 +209,7 @@ jobs:
       - run:
           name: Run migrations
           command: |
+            mkdir backend/node_modules
             echo $(pwd)
             cd backend
             echo $(pwd)
