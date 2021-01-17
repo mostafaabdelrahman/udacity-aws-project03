@@ -250,7 +250,7 @@ jobs:
       - run:
           name: Deploy frontend objects
           command: |
-            cat frontend/.env
+            export API_URL=$(cat frontend/.env)
             cd frontend
             npm i
             npm run build
