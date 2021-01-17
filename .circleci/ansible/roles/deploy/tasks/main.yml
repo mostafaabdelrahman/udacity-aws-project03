@@ -1,6 +1,23 @@
 ---
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
-    src: ~/project/backend/dist
+    src: ~/project/artifact.tar.gz
     dest: ~/backend/
 
+- name: Uncompress Backend
+  shell: |
+    cd ~/backend
+    tar xvzf artifact.tar.gz -C .
+    ls -la
+    
+# - name: Build
+#   become: true
+#   shell: |
+#     cd ~/backend
+#     npm i
+#     npm run build
+
+# - name: Start PM2
+#   shell: |
+#     cd ~/backend 
+#     pm2 start npm --name backend -- start

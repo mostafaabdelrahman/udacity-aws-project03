@@ -241,8 +241,6 @@ jobs:
           fingerprints: ["43:26:dd:2e:16:e6:d7:87:c3:49:45:d4:6e:ff:57:50"]
       - attach_workspace:
           at: .circleci/ansible
-      - restore_cache:
-          keys: ['backend-build-{{ checksum ".circleci/config.yml" }}']
       - run:
           name: "Install dependencies (ansible, awscli)" 
           command: |
@@ -254,9 +252,8 @@ jobs:
           command: |
             echo "35.162.120.217" >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-            ls -la
-            ls -la backend
-            #ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
+            tar -C backend -czvf artifact.tar.gz .
+            ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure  
 
 workflows:
