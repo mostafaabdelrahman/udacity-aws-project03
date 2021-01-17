@@ -252,7 +252,7 @@ jobs:
           command: |
             # your code here
             node --version
-            npm --verion
+            # npm --verion
             tar --version
             # cd frontend
             # npm i
