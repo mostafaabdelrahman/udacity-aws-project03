@@ -246,11 +246,11 @@ jobs:
             # your code here
             export API_URL=$(curl -H "token: 317fa08a-917f-4195-8b3c-60754f3ce2d2" --request GET https://api.memstash.io/values/backend_url)
             #export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            echo "${API_URL}" >> frontend/.env
       - run:
           name: Deploy frontend objects
           command: |
-            echo "API_URL is: ${API_URL}"
+            cat frontend/.env
             cd frontend
             npm i
             npm run build
