@@ -261,7 +261,6 @@ jobs:
       - revert-migrations
       - destroy-environment
 
-
   deploy-backend:
     docker:
       - image: python:3.7-alpine3.11
@@ -277,7 +276,6 @@ jobs:
             apk add --no-cache ansible python3 py3-pip curl
             pip3 install --upgrade pip
             pip3 install awscli
-            curl --version
       - run:
           name: "Create .env file inside backend directory"
           command: |
@@ -301,6 +299,37 @@ jobs:
             tar -C backend -czf artifact.tar.gz .
             ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
           no_output_timeout: 60m
+      - revert-migrations
+      - destroy-environment
+
+  smoke-test:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - run:
+          name: "Install dependencies"
+          command: |
+            apk add --no-cache python3 py3-pip curl
+            pip3 install --upgrade pip
+            pip3 install awscli
+      - run:
+          name: "Get backend url and Backend smoke test"
+          command: |
+            export API_URL=$(curl -H "token: 317fa08a-917f-4195-8b3c-60754f3ce2d2" --request GET https://api.memstash.io/values/backend_url)
+            export BACKEND_URL="$API_URL/api/status"
+            curl $BACKEND_URL && echo "Backend smoke test SUCCESS !" || echo "Backend smoke test failed !"
+      - run:
+          name: "Frontend smoke test."
+          command: |
+            # FRONTEND_URL="http://udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-2.amazonaws.com"
+            URL="http://udapeople-mostafaabdelrahman.s3-website-us-west-2.amazonaws.com/"
+            if curl -s ${URL} | grep "Welcome"
+            then
+              return 1
+            else
+              return 0
+            fi            
       - revert-migrations
       - destroy-environment
 
