@@ -157,25 +157,25 @@ jobs:
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
 
-      - run:
-          name: Add back-end ip to ansible inventory
-          command: |
-            aws ec2 describe-instances \
-              --filters "Name=tag:project,Values=udapeople" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> .circleci/ansible/inventory.txt
+      # - run:
+      #     name: Add back-end ip to ansible inventory
+      #     command: |
+      #       aws ec2 describe-instances \
+      #         --filters "Name=tag:project,Values=udapeople" \
+      #         --query 'Reservations[*].Instances[*].PublicIpAddress' \
+      #         --output text >> .circleci/ansible/inventory.txt
 
-      - run:
-          name: Install persist_to_workspace dependencies
-          command: |
-            yum -y install tar gzip
+      # - run:
+      #     name: Install persist_to_workspace dependencies
+      #     command: |
+      #       yum -y install tar gzip
 
-      - persist_to_workspace:
-          root: .circleci/ansible
-          paths:
-            - inventory.txt
+      # - persist_to_workspace:
+      #     root: .circleci/ansible
+      #     paths:
+      #       - inventory.txt
       
-      - destroy-environment
+      # - destroy-environment
 
   configure-infrastructure:
     docker:
@@ -256,8 +256,8 @@ jobs:
             npm i
             npm run build
             npm audit fix --audit-level=critical --force
-            aws s3 cp ./dist s3://udapeople-mostafaabdelrahman --recursive
-            # aws s3 cp ./dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            # aws s3 cp ./dist s3://udapeople-mostafaabdelrahman --recursive
+            aws s3 cp ./dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       # Here's where you will add some code to rollback on failure  
       - revert-migrations
       - destroy-environment
@@ -324,12 +324,11 @@ jobs:
           name: "Frontend smoke test."
           command: |
             URL="http://udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-2.amazonaws.com"
-            # URL="http://udapeople-mostafaabdelrahman.s3-website-us-west-2.amazonaws.com/"
             if curl -s ${URL} | grep "Welcome"
             then
               return 1
             else
-              return 0
+              return 1
             fi            
       # - destroy-environment
       # - revert-migrations
@@ -355,4 +354,13 @@ workflows:
       # - deploy-frontend
       # - deploy-backend
       # requires: [build-backend,run-migrations]
+
+      # - deploy-infrastructure
+      # - run-migrations
+      # - deploy-frontend:
+      #     requires: [run-migrations]
+      # - smoke-test:
+      #     requires: [deploy-infrastructure,run-migrations]
+
       - smoke-test
+
