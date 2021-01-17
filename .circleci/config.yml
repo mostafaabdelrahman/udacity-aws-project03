@@ -56,7 +56,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-build-${CIRCLE_WORKFLOW_ID}']
+          keys: ['backend-build-{{ .BuildNum }}']
       - run:
           name: Build backend
           command: |
@@ -68,7 +68,7 @@ jobs:
           paths:
             - "backend/node_modules"
             - "backend/dist"
-          key: backend-build-${CIRCLE_WORKFLOW_ID}
+          key: backend-build-{{ .BuildNum }}
 
   test-frontend:
     docker:
@@ -242,7 +242,7 @@ jobs:
       - attach_workspace:
           at: .circleci/ansible
       - restore_cache:
-          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
+          keys: ['backend-build-{{ .BuildNum }}']
       - run:
           name: "Install dependencies (ansible, awscli)" 
           command: |
@@ -254,7 +254,7 @@ jobs:
           command: |
             echo "35.162.120.217" >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-            ls backend
+            ls -la backend
             ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure  
 
