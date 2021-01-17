@@ -309,7 +309,7 @@ workflows:
   udapeople-workflow:
     jobs:
       # - build-frontend
-      - build-backend
+      # - build-backend
       # - test-frontend:
       #     requires: [build-frontend]
       # - test-backend:
@@ -322,7 +322,7 @@ workflows:
       #     # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
-      - run-migrations
+      # - run-migrations
       # - deploy-frontend
-      - deploy-backend:
-          requires: [build-backend,run-migrations]
+      - deploy-backend
+      # requires: [build-backend,run-migrations]

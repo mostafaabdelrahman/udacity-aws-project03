@@ -15,9 +15,26 @@
     cd /home/ubuntu/backend
     npm i
     npm run build
-    npm audit fix --audit-level=critical --force
+    # npm audit fix --audit-level=critical --force
 
-- name: Start pm2 from backend
-  shell: |
-    cd ~/backend 
-    pm2 start npm --name backend -- start
+# - name: Start pm2 from backend
+#   shell: |
+#     cd ~/backend 
+#     pm2 start npm --name backend -- start
+
+- name: "start server"
+    become: true
+    command: pm2 start -f ./main.js
+    args:
+      chdir: /home/ubuntu/backend/dist
+    environment:
+      ENVIRONMENT: production
+      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
+      TYPEORM_MIGRATIONS_DIR: "./migrations"
+      TYPEORM_MIGRATIONS: "./migrations/*.js"
+      TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
+      TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
+      TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
+      TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
+      TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
+      TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
