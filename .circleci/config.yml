@@ -251,9 +251,6 @@ jobs:
           name: Deploy frontend objects
           command: |
             # your code here
-            node --version
-            # npm --verion
-            tar --version
             # cd frontend
             # npm i
             # npm run build
