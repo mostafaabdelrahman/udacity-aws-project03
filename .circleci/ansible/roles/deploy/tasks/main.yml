@@ -21,4 +21,3 @@
   shell: |
     cd ~/backend 
     pm2 start npm --name backend -- start
-    pm2 ls
