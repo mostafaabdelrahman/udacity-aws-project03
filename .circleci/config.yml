@@ -136,18 +136,17 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-      - run:
-          name: Programmatically save the new back-end url using MemStash.io
-          command: |
-            # Get BackendURL from cloudformation outputs
-            export backend_url=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
-            --no-paginate --output text)
-            # Save to MemStash.io
-            curl -H "Content-Type: text/plain" \
-              -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
-              --data "$backend_url" https://api.memstash.io/values/backend_url
-
+      # - run:
+      #     name: Programmatically save the new back-end url using MemStash.io
+      #     command: |
+      #       # Get BackendURL from cloudformation outputs
+      #       export backend_url=$(aws cloudformation \
+      #       list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
+      #       --no-paginate --output text)
+      #       # Save to MemStash.io
+      #       curl -H "Content-Type: text/plain" \
+      #         -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
+      #         --data "$backend_url" https://api.memstash.io/values/backend_url
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -156,7 +155,6 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
-
       # - run:
       #     name: Add back-end ip to ansible inventory
       #     command: |
@@ -164,7 +162,6 @@ jobs:
       #         --filters "Name=tag:project,Values=udapeople" \
       #         --query 'Reservations[*].Instances[*].PublicIpAddress' \
       #         --output text >> .circleci/ansible/inventory.txt
-
       # - run:
       #     name: Install persist_to_workspace dependencies
       #     command: |
@@ -355,12 +352,12 @@ workflows:
       # - deploy-backend
       # requires: [build-backend,run-migrations]
 
-      # - deploy-infrastructure
-      # - run-migrations
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-infrastructure,run-migrations]
+      - deploy-infrastructure
+      - run-migrations
+      - deploy-frontend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-infrastructure,run-migrations]
 
-      - smoke-test
+      # - smoke-test
 
