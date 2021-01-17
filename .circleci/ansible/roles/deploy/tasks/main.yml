@@ -1,4 +1,7 @@
 ---
+- name: "show remote environment"
+    shell: env
+
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
     src: ~/project/artifact.tar.gz
@@ -9,32 +12,42 @@
     cd ~/backend
     tar xzf artifact.tar.gz -C . && rm -rf artifact.tar.gz
 
-- name: Build Backend
-  become: true
-  shell: |
-    cd /home/ubuntu/backend
-    npm i
-    npm run build
-    # npm audit fix --audit-level=critical --force
-
-# - name: Start pm2 from backend
+# - name: Build Backend
+#   become: true
 #   shell: |
-#     cd ~/backend 
-#     pm2 start npm --name backend -- start
+#     cd /home/ubuntu/backend
+#     npm i
+#     npm run build
+#     # npm audit fix --audit-level=critical --force
 
-- name: "start server"
-  become: true
-  command: pm2 start -f ./main.js
-  args:
-    chdir: /home/ubuntu/backend/dist
-  environment:
-    ENVIRONMENT: production
-    TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
-    TYPEORM_MIGRATIONS_DIR: "./migrations"
-    TYPEORM_MIGRATIONS: "./migrations/*.js"
-    TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
-    TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
-    TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
-    TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
-    TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
-    TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
+# # - name: Start pm2 from backend
+# #   shell: |
+# #     cd ~/backend 
+# #     pm2 start npm --name backend -- start
+
+
+# - name: "start backend app with pm2"
+#   become: yes
+#   shell: |    
+#      pm2 start main.js --name backend
+#   args:
+#     chdir: /home/ubuntu/backend
+
+
+
+# # - name: "start server"
+# #   become: true
+# #   command: pm2 start -f ./main.js
+# #   args:
+# #     chdir: /home/ubuntu/backend/dist
+# #   environment:
+# #     ENVIRONMENT: production
+# #     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
+# #     TYPEORM_MIGRATIONS_DIR: "./migrations"
+# #     TYPEORM_MIGRATIONS: "./migrations/*.js"
+# #     TYPEORM_ENTITIES: "./modules/domain/**/*.entity.js"
+# #     TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
+# #     TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
+# #     TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
+# #     TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
+# #     TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
