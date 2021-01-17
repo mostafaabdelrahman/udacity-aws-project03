@@ -317,23 +317,22 @@ jobs:
       - run:
           name: "Get backend url and Backend smoke test"
           command: |
-            node --version
             export API_URL=$(curl -H "token: 317fa08a-917f-4195-8b3c-60754f3ce2d2" --request GET https://api.memstash.io/values/backend_url)
             export BACKEND_URL="$API_URL/api/status"
             curl $BACKEND_URL && echo "Backend smoke test SUCCESS !" || echo "Backend smoke test failed !"
       - run:
           name: "Frontend smoke test."
           command: |
-            # FRONTEND_URL="http://udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-2.amazonaws.com"
-            URL="http://udapeople-mostafaabdelrahman.s3-website-us-west-2.amazonaws.com/"
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-2.amazonaws.com"
+            # URL="http://udapeople-mostafaabdelrahman.s3-website-us-west-2.amazonaws.com/"
             if curl -s ${URL} | grep "Welcome"
             then
               return 1
             else
               return 0
             fi            
-      - destroy-environment
-      - revert-migrations
+      # - destroy-environment
+      # - revert-migrations
 
 workflows:
   udapeople-workflow:
