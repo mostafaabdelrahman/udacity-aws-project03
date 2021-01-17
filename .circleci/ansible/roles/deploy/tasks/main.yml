@@ -7,10 +7,10 @@
 - name: Uncompress Backend
   shell: |
     cd ~/backend
-    tar xvzf artifact.tar.gz -C . && rm -rf artifact.tar.gz
+    tar xzf artifact.tar.gz -C . && rm -rf artifact.tar.gz
     
 - name: Build
-  become: true
+  # become: true
   shell: |
     cd ~/backend
     npm i
