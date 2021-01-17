@@ -245,7 +245,6 @@ jobs:
           command: |
             # your code here
             export API_URL=$(curl -H "token: 317fa08a-917f-4195-8b3c-60754f3ce2d2" --request GET https://api.memstash.io/values/backend_url)
-            #export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}" >> frontend/.env
       - run:
           name: Deploy frontend objects
@@ -352,5 +351,6 @@ workflows:
       #     requires: [deploy-infrastructure]
       # - run-migrations
       # - deploy-frontend
-      - deploy-backend
+      # - deploy-backend
       # requires: [build-backend,run-migrations]
+      - smoke-test
