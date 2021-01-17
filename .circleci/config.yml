@@ -309,7 +309,7 @@ jobs:
       - run:
           name: "Install dependencies"
           command: |
-            apk add --no-cache python3 py3-pip curl
+            apk add --no-cache nodejs npm python3 py3-pip curl
             pip3 install --upgrade pip
             pip3 install awscli
       - run:
