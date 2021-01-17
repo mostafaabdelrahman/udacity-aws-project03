@@ -250,11 +250,12 @@ jobs:
       - run:
           name: Deploy frontend objects
           command: |
+            echo "${API_URL}"
             cd frontend
             npm i
             npm audit fix --audit-level=critical --force
             npm run build
-            aws s3 cp ./dist s3://udapeople-mostafaabdelrahman --recursive
+            # aws s3 cp ./dist s3://udapeople-mostafaabdelrahman --recursive
             # aws s3 cp ./dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       # Here's where you will add some code to rollback on failure  
       - revert-migrations
@@ -290,7 +291,7 @@ jobs:
 workflows:
   udapeople-workflow:
     jobs:
-      # - build-frontend
+      - build-frontend
       # - build-backend
       # - test-frontend:
       #     requires: [build-frontend]
