@@ -278,7 +278,6 @@ jobs:
             pip3 install --upgrade pip
             pip3 install awscli
             curl --version
-
       - run:
           name: "Create .env file inside backend directory"
           command: |
@@ -293,12 +292,12 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-
       - run:
-          name: Deploy backend
+          name: "Deploy backend using Ansible"
           command: |
+            # Simulate getting IP in inventory from workspace
             echo "35.162.120.217" >> .circleci/ansible/inventory.txt
-            cat .circleci/ansible/inventory.txt
+            #cat .circleci/ansible/inventory.txt
             tar -C backend -czf artifact.tar.gz .
             ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
           no_output_timeout: 60m
