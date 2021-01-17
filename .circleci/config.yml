@@ -229,6 +229,39 @@ jobs:
       - revert-migrations
       - destroy-environment
 
+  deploy-frontend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+            yum update -y && yum install -y nodejs npm
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+            export API_URL=$(curl -H "token: 317fa08a-917f-4195-8b3c-60754f3ce2d2" --request GET https://api.memstash.io/values/backend_url)
+            #export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+      - run:
+          name: Deploy frontend objects
+          command: |
+            # your code here
+            nodejs --version
+            npm --verion
+            tar --version
+            # cd frontend
+            # npm i
+            # npm run build
+            # npm audit fix --audit-level=critical --force
+            aws s3 ls s3://udapeople-mostafaabdelrahman
+            # aws s3 cp ./dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+
+      # Here's where you will add some code to rollback on failure  
+
   deploy-backend:
     docker:
       - image: python:3.7-alpine3.11
@@ -251,10 +284,10 @@ jobs:
             cat .circleci/ansible/inventory.txt
             tar -C backend -czf artifact.tar.gz .
             ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
-          no_output_timeout: 30m
+          no_output_timeout: 60m
       - revert-migrations
       - destroy-environment
-      
+
 workflows:
   udapeople-workflow:
     jobs:
@@ -273,5 +306,6 @@ workflows:
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
       - run-migrations
+      - deploy-frontend
       - deploy-backend:
           requires: [build-backend,run-migrations]
