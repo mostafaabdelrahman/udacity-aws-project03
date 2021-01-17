@@ -39,7 +39,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['frontend-build-${CIRCLE_WORKFLOW_ID:0:7}']
+          keys: ['frontend-build-{{ checksum ".circleci/config.yml" }}']
       - run:
           name: Build frontend
           command: |
@@ -48,7 +48,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build-${CIRCLE_WORKFLOW_ID:0:7}
+          key: frontend-build-{{ checksum ".circleci/config.yml" }}
 
   build-backend:
     docker:
@@ -64,10 +64,7 @@ jobs:
             npm i
             npm run build
       - save_cache:
-          # paths: [backend/node_modules,backend/dist]
-          paths:
-            - "backend/node_modules"
-            - "backend/dist"
+          paths: [backend/node_modules]
           key: backend-build-{{ checksum ".circleci/config.yml" }}
 
   test-frontend:
@@ -76,7 +73,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['frontend-build-${CIRCLE_WORKFLOW_ID:0:7}']
+          keys: ['frontend-build-{{ checksum ".circleci/config.yml" }}']
       - run:
           name: Test frontend
           command: |
@@ -89,7 +86,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
+          keys: ['backend-build-{{ checksum ".circleci/config.yml" }}']
       - run:
           name: Test backend
           command: |
@@ -102,7 +99,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['frontend-build-${CIRCLE_WORKFLOW_ID:0:7}']
+          keys: ['frontend-build-{{ checksum ".circleci/config.yml" }}']
       - run:
           name: Scan frontend
           command: |
@@ -116,7 +113,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-build-${CIRCLE_WORKFLOW_ID:0:7}']
+          keys: ['backend-build-{{ checksum ".circleci/config.yml" }}']
       - run:
           name: Scan backend
           command: |

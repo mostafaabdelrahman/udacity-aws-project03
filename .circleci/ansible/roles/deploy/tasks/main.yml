@@ -7,17 +7,17 @@
 - name: Uncompress Backend
   shell: |
     cd ~/backend
-    tar xvzf artifact.tar.gz -C .
-    ls -la
+    tar xvzf artifact.tar.gz -C . && rm -rf artifact.tar.gz
     
-# - name: Build
-#   become: true
-#   shell: |
-#     cd ~/backend
-#     npm i
-#     npm run build
+- name: Build
+  become: true
+  shell: |
+    cd ~/backend
+    npm i
+    npm run build
+    npm audit fix --audit-level=critical --force
 
-# - name: Start PM2
-#   shell: |
-#     cd ~/backend 
-#     pm2 start npm --name backend -- start
+- name: Start PM2
+  shell: |
+    cd ~/backend 
+    pm2 start npm --name backend -- start
