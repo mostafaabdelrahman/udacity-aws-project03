@@ -251,8 +251,10 @@ jobs:
             cat .circleci/ansible/inventory.txt
             tar -C backend -czf artifact.tar.gz .
             ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure  
-
+          no_output_timeout: 30m
+      - revert-migrations
+      - destroy-environment
+      
 workflows:
   udapeople-workflow:
     jobs:
