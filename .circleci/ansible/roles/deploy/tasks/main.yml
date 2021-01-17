@@ -10,7 +10,7 @@
     tar xzf artifact.tar.gz -C . && rm -rf artifact.tar.gz
 
 - name: Build Backend
-  become: true
+  # become: true
   shell: |
     cd /home/ubuntu/backend
     npm i
@@ -18,10 +18,11 @@
     # npm audit fix --audit-level=critical --force
 
 - name: Start pm2 from backend
-  become: true
+  # become: true
   shell: |
     cd /home/ubuntu/backend
-    pm2 -u ubuntu start npm --name backend -- start
+    # pm2 -u ubuntu start npm --name backend -- start
+    pm2 start npm --name backend -- start
 
 
 # - name: "start backend app with pm2"
