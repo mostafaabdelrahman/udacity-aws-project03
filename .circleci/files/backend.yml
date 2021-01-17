@@ -34,8 +34,8 @@ Resources:
         - Key: Name
           Value: !Sub udapeople-backend-${ID}
 
-Outputs:
-  BackendURL:
-    Value: !Sub http://${EC2Instance.PublicDnsName}:3030
-    Export:
-      Name: BackendURL
+# Outputs:
+#   BackendURL:
+#     Value: !Sub http://${EC2Instance.PublicDnsName}:3030
+#     Export:
+#       Name: BackendURL
