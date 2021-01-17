@@ -254,8 +254,9 @@ jobs:
           command: |
             echo "35.162.120.217" >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
+            ls -la
             ls -la backend
-            ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
+            #ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure  
 
 workflows:
