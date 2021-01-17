@@ -56,7 +56,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: ['backend-build-{{ .BuildNum }}']
+          keys: ['backend-build-{{ checksum ".circleci/config.yml" }}']
       - run:
           name: Build backend
           command: |
@@ -68,7 +68,7 @@ jobs:
           paths:
             - "backend/node_modules"
             - "backend/dist"
-          key: backend-build-{{ .BuildNum }}
+          key: backend-build-{{ checksum ".circleci/config.yml" }}
 
   test-frontend:
     docker:
@@ -242,7 +242,7 @@ jobs:
       - attach_workspace:
           at: .circleci/ansible
       - restore_cache:
-          keys: ['backend-build-{{ .BuildNum }}']
+          keys: ['backend-build-{{ checksum ".circleci/config.yml" }}']
       - run:
           name: "Install dependencies (ansible, awscli)" 
           command: |
