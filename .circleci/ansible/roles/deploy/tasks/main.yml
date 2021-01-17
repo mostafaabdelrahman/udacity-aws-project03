@@ -1,6 +1,6 @@
 ---
 - name: "show remote environment"
-    shell: env
+  shell: env
 
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
