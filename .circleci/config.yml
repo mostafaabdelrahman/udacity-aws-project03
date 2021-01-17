@@ -11,7 +11,6 @@ commands:
           when: on_fail
           command: |
             aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-            # aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force
             aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
 
@@ -26,8 +25,8 @@ commands:
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             SUCCESS=`curl -H "token: tkn-${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}`
-            echo $SUCCESS
-            if(( $SUCCESS==1 )); 
+            SUCCESS=1
+            if [ $SUCCESS==1 ]; 
             then
               cd ~/project/backend
               npm install
@@ -352,12 +351,12 @@ workflows:
       # - deploy-backend
       # requires: [build-backend,run-migrations]
 
-      - deploy-infrastructure
-      - run-migrations
-      - deploy-frontend:
-          requires: [run-migrations]
-      - smoke-test:
-          requires: [deploy-infrastructure,run-migrations]
+      # - deploy-infrastructure
+      # - run-migrations
+      # - deploy-frontend:
+      #     requires: [run-migrations]
+      # - smoke-test:
+      #     requires: [deploy-infrastructure,deploy-frontend]
 
-      # - smoke-test
+      - smoke-test
 
