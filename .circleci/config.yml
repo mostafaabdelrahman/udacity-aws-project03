@@ -274,9 +274,10 @@ jobs:
       - run:
           name: "Install dependencies (ansible, awscli)" 
           command: |
-            apk add --no-cache ansible python3 py3-pip
+            apk add --no-cache ansible python3 py3-pip curl
             pip3 install --upgrade pip
             pip3 install awscli
+            curl --version
 
       - run:
           name: "Create .env file inside backend directory"
@@ -295,7 +296,6 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            cat backend/.env
             echo "35.162.120.217" >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
             tar -C backend -czf artifact.tar.gz .
