@@ -33,53 +33,53 @@
 - ### My screenshots in JPG format are included in my code repository in the root folder:
   1. Job failed because of compile errors. [SCREENSHOT01]
 
-     ![SCREENSHOT01.jpg](SCREENSHOT01.JPG)
+     ![SCREENSHOT01.JPG](SCREENSHOT01.JPG)
 
   1. Job failed because of unit tests. [SCREENSHOT02]
  
-     ![SCREENSHOT02.jpg](SCREENSHOT02.jpg)
+     ![SCREENSHOT02.JPG](SCREENSHOT02.JPG)
  
   1. Job that failed because of vulnerable packages. [SCREENSHOT03]
 
-     ![SCREENSHOT03.jpg](SCREENSHOT03.jpg)
+     ![SCREENSHOT03.JPG](SCREENSHOT03.JPG)
 
   1. An alert from one of your failed builds. [SCREENSHOT04]
 
-     ![SCREENSHOT04.jpg](SCREENSHOT04.jpg)
+     ![SCREENSHOT04.JPG](SCREENSHOT04.JPG)
 
   1. Appropriate job failure for infrastructure creation. [SCREENSHOT05]
 
-     ![SCREENSHOT05.jpg](SCREENSHOT05.jpg)
+     ![SCREENSHOT05.JPG](SCREENSHOT05.JPG)
 
   1. Appropriate job failure for the smoke test job. [SCREENSHOT06]
 
-     ![SCREENSHOT06.jpg](SCREENSHOT06.jpg)
+     ![SCREENSHOT06.JPG](SCREENSHOT06.JPG)
 
   1. Successful rollback after a failed smoke test. [SCREENSHOT07]
 
-     ![SCREENSHOT07.jpg](SCREENSHOT07.jpg)
+     ![SCREENSHOT07.JPG](SCREENSHOT07.JPG)
 
   1. Successful promotion job. [SCREENSHOT08]
 
-     ![SCREENSHOT08.jpg](SCREENSHOT08.jpg)
+     ![SCREENSHOT08.JPG](SCREENSHOT08.JPG)
 
   1. Successful cleanup job. [SCREENSHOT09]
 
-     ![SCREENSHOT09.jpg](SCREENSHOT09.jpg)
+     ![SCREENSHOT09.JPG](SCREENSHOT09.JPG)
 
   1. Only deploy on pushed to `master` branch. [SCREENSHOT10]
 
-     ![SCREENSHOT10.jpg](SCREENSHOT10.jpg)
+     ![SCREENSHOT10.JPG](SCREENSHOT10.JPG)
 
   1. Provide a screenshot of a graph of your EC2 instance including available memory, available disk space, and CPU usage. [[SCREENSHOT11_A_CPU, SCREENSHOT11_B_Mem, SCREENSHOT11_C_FS]
 
-     ![SCREENSHOT11_A_CPU.jpg](SCREENSHOT11_A_CPU.jpg)
-     ![SCREENSHOT11_B_Mem.jpg](SCREENSHOT11_B_Mem.jpg)
-     ![SCREENSHOT11_C_FS.jpg](SCREENSHOT11_C_FS.jpg)
+     ![SCREENSHOT11_A_CPU.JPG](SCREENSHOT11_A_CPU.JPG)
+     ![SCREENSHOT11_B_Mem.JPG](SCREENSHOT11_B_Mem.JPG)
+     ![SCREENSHOT11_C_FS.JPG](SCREENSHOT11_C_FS.JPG)
 
   1. Provide a screenshot of an alert that was sent by Prometheus. [SCREENSHOT12]
 
-     ![SCREENSHOT12.jpg](SCREENSHOT12.jpg)
+     ![SCREENSHOT12.JPG](SCREENSHOT12.JPG)
 
 
 
