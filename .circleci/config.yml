@@ -137,9 +137,9 @@ jobs:
       - run:
           name: Programmatically save the new back-end url using MemStash.io
           command: |
-            # Get BackendURL from cloudformation outputs
+            # Get BackendFullURL from cloudformation outputs
             export backend_url=$(aws cloudformation \
-            list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
+            list-exports --query "Exports[?Name==\`BackendFullURL\`].Value" \
             --no-paginate --output text)
             # Save to MemStash.io
             curl -H "Content-Type: text/plain" \
@@ -193,7 +193,6 @@ jobs:
       - run:
           name: Configure server
           command: |
-            echo "35.162.120.217" >> .circleci/ansible/inventory.txt
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt
       - destroy-environment  
 
@@ -288,8 +287,7 @@ jobs:
           name: "Deploy backend using Ansible"
           command: |
             # Simulate getting IP in inventory from workspace
-            echo "35.162.120.217" >> .circleci/ansible/inventory.txt
-            #cat .circleci/ansible/inventory.txt
+            # echo "35.162.120.217" >> .circleci/ansible/inventory.txt
             tar -C backend -czf artifact.tar.gz .
             ansible-playbook .circleci/ansible/deploy-backend.yml -i .circleci/ansible/inventory.txt
           no_output_timeout: 60m

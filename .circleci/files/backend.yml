@@ -39,7 +39,7 @@ Resources:
           Value: !Sub udapeople-backend-${ID}
 
 Outputs:
-  BackendURL:
+  BackendFullURL:
     Value: !Sub http://${EC2Instance.PublicDnsName}:3030
     Export:
-      Name: BackendURL
+      Name: BackendFullURL
