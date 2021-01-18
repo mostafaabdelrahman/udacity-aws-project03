@@ -33,7 +33,7 @@
 - ### My screenshots in JPG format are included in my code repository in the root folder:
   1. Job failed because of compile errors. [SCREENSHOT01]
 
-     ![SCREENSHOT01.jpg](SCREENSHOT01.jpg)
+     ![SCREENSHOT01.jpg](SCREENSHOT01.JPG)
 
   1. Job failed because of unit tests. [SCREENSHOT02]
  
