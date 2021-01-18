@@ -8,6 +8,7 @@
     - ansible_python_interpreter: /usr/bin/python3
     - ansible_host_key_checking: false
     - ansible_stdout_callback: yaml
+
   environment:
     ENVIRONMENT: "production"
     TYPEORM_CONNECTION: "{{ lookup('env','TYPEORM_CONNECTION') }}"
@@ -17,5 +18,6 @@
     TYPEORM_USERNAME: "{{ lookup('env','TYPEORM_USERNAME') }}"
     TYPEORM_PASSWORD: "{{ lookup('env','TYPEORM_PASSWORD') }}"
     TYPEORM_DATABASE: "{{ lookup('env','TYPEORM_DATABASE') }}"
+
   roles:
     - deploy
