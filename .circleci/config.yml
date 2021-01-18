@@ -24,7 +24,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=`curl -H "token: tkn-${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}`
+            SUCCESS=`curl -H "token: mg-${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}`
             if [ $SUCCESS==1 ]; 
             then
               cd ~/project/backend
@@ -134,17 +134,17 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-      # - run:
-      #     name: Programmatically save the new back-end url using MemStash.io
-      #     command: |
-      #       # Get BackendURL from cloudformation outputs
-      #       export backend_url=$(aws cloudformation \
-      #       list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
-      #       --no-paginate --output text)
-      #       # Save to MemStash.io
-      #       curl -H "Content-Type: text/plain" \
-      #         -H "token: 0a5dd469-1b30-49bc-a209-200e1a3c0971" --request PUT \
-      #         --data "$backend_url" https://api.memstash.io/values/backend_url
+      - run:
+          name: Programmatically save the new back-end url using MemStash.io
+          command: |
+            # Get BackendURL from cloudformation outputs
+            export backend_url=$(aws cloudformation \
+            list-exports --query "Exports[?Name==\`BackendURL\`].Value" \
+            --no-paginate --output text)
+            # Save to MemStash.io
+            curl -H "Content-Type: text/plain" \
+              -H "token: be-${CIRCLE_WORKFLOW_ID}" --request PUT \
+              --data "$backend_url" https://api.memstash.io/values/backend_url
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -153,22 +153,22 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
-      # - run:
-      #     name: Add back-end ip to ansible inventory
-      #     command: |
-      #       aws ec2 describe-instances \
-      #         --filters "Name=tag:project,Values=udapeople" \
-      #         --query 'Reservations[*].Instances[*].PublicIpAddress' \
-      #         --output text >> .circleci/ansible/inventory.txt
-      # - run:
-      #     name: Install persist_to_workspace dependencies
-      #     command: |
-      #       yum -y install tar gzip
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            aws ec2 describe-instances \
+              --filters "Name=tag:project,Values=udapeople" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text >> .circleci/ansible/inventory.txt
+      - run:
+          name: Install persist_to_workspace dependencies
+          command: |
+            yum -y install tar gzip
 
-      # - persist_to_workspace:
-      #     root: .circleci/ansible
-      #     paths:
-      #       - inventory.txt
+      - persist_to_workspace:
+          root: .circleci/ansible
+          paths:
+            - inventory.txt
       
       - destroy-environment
 
@@ -182,8 +182,8 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["43:26:dd:2e:16:e6:d7:87:c3:49:45:d4:6e:ff:57:50"]
-      # - attach_workspace:
-      #     at: .circleci/ansible
+      - attach_workspace:
+          at: .circleci/ansible
       - run:
           name: "Install Ansible using apk, AWSCLI using pip"
           command: |
@@ -195,7 +195,7 @@ jobs:
           command: |
             echo "35.162.120.217" >> .circleci/ansible/inventory.txt
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt
-      # - destroy-environment  
+      - destroy-environment  
 
   run-migrations:
     docker:
@@ -215,13 +215,12 @@ jobs:
       - run:
           name: Send migration results to memstash
           command: |
-            echo "tkn-${CIRCLE_WORKFLOW_ID}"
             if grep -q "has been executed successfully" ~/project/backend/migrations.log
             then
-              curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
+              curl -H "Content-Type: text/plain" -H "token: mg-${CIRCLE_WORKFLOW_ID}" \
               --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             else
-              curl -H "Content-Type: text/plain" -H "token: tkn-${CIRCLE_WORKFLOW_ID}" \
+              curl -H "Content-Type: text/plain" -H "token: mg-${CIRCLE_WORKFLOW_ID}" \
               --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
       - revert-migrations
@@ -241,7 +240,7 @@ jobs:
           name: Get backend url
           command: |
             # your code here
-            export API_URL=$(curl -H "token: 317fa08a-917f-4195-8b3c-60754f3ce2d2" --request GET https://api.memstash.io/values/backend_url)
+            export API_URL=$(curl -H "token: be-${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/backend_url)
             echo "${API_URL}" >> frontend/.env
       - run:
           name: Deploy frontend objects
@@ -253,7 +252,6 @@ jobs:
             npm audit fix --audit-level=critical --force
             # aws s3 cp ./dist s3://udapeople-mostafaabdelrahman --recursive
             aws s3 cp ./dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      # Here's where you will add some code to rollback on failure  
       - revert-migrations
       - destroy-environment
 
@@ -312,7 +310,7 @@ jobs:
       - run:
           name: "Get backend url and Backend smoke test"
           command: |
-            export API_URL=$(curl -H "token: 317fa08a-917f-4195-8b3c-60754f3ce2d2" --request GET https://api.memstash.io/values/backend_url)
+            export API_URL=$(curl -H "token: be-${CIRCLE_WORKFLOW_ID}" --request GET https://api.memstash.io/values/backend_url)
             export BACKEND_URL="$API_URL/api/status"
             curl $BACKEND_URL && echo "Backend smoke test SUCCESS !" || echo "Backend smoke test failed !"
       - run:
@@ -388,36 +386,53 @@ jobs:
 workflows:
   udapeople-workflow:
     jobs:
-      - configure-infrastructure
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - deploy-infrastructure
-      #     # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations
-      # - deploy-frontend
-      # - deploy-backend
-      # requires: [build-backend,run-migrations]
-
-      # - deploy-infrastructure
-      # - run-migrations
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-infrastructure,deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
-
-      # - smoke-test
-
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master] 
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+          filters:
+            branches:
+              only: [master]
+      - run-migrations:
+          requires: [configure-infrastructure]
+          filters:
+            branches:
+              only: [master]
+      - deploy-frontend:
+          requires: [run-migrations]
+          filters:
+            branches:
+              only: [master]
+      - deploy-backend:
+          requires: [run-migrations]
+          filters:
+            branches:
+              only: [master]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
+          filters:
+            branches:
+              only: [master]
+      - cloudfront-update:
+          requires: [smoke-test]
+          filters:
+            branches:
+              only: [master]
+      - cleanup:
+          requires: [cloudfront-update]
+          filters:
+            branches:
+              only: [master]
